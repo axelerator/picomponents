@@ -1,4 +1,7 @@
-module Pico exposing (includeFromCDN, Theme(..), main_, ColorScheme(..), Layout(..))
+module Pico exposing
+    ( includeFromCDN, Theme(..)
+    , ColorScheme(..), Layout(..), main_, themeName, themes
+    )
 
 {-| Picomponents is a UI componentn library using [pico](https://picocss.com)
 
@@ -9,10 +12,8 @@ module Pico exposing (includeFromCDN, Theme(..), main_, ColorScheme(..), Layout(
 
 -}
 
-import Html exposing (node)
-import Html.Attributes exposing (href, rel)
-import Html exposing (Html)
-import Html.Attributes exposing (class)
+import Html exposing (Html, node)
+import Html.Attributes exposing (attribute, class, href, rel)
 
 
 {-| The available [themes](https://picocss.com/docs/version-picker/)
@@ -39,16 +40,45 @@ type Theme
     | Zinc
 
 
+{-| The available [themes](https://picocss.com/docs/version-picker/)
+-}
+themes : List Theme
+themes =
+    [ Amber
+    , Blue
+    , Cyan
+    , Fuchsia
+    , Green
+    , Grey
+    , Indigo
+    , Jade
+    , Lime
+    , Orange
+    , Pink
+    , Pumpkin
+    , Purple
+    , Red
+    , Sand
+    , Slate
+    , Violet
+    , Yellow
+    , Zinc
+    ]
+
+
 {-| Include the CSS for the given theme.
 -}
 includeFromCDN : Theme -> Html.Html msg
 includeFromCDN theme =
     node "link" [ rel "stylesheet", href (cdnUrl theme) ] []
 
+
 {-| Used to define the layout of the application
 -}
+type Layout
+    = Centered
+    | FullWidth
 
-type Layout = Centered | FullWidth
 
 layoutClass : Layout -> String
 layoutClass layout =
@@ -59,35 +89,39 @@ layoutClass layout =
         FullWidth ->
             "container-fluid"
 
+
 {-| Pico CSS comes with both Light and Dark color schemes, automatically enabled based on user preferences.
 -}
-type ColorScheme = Light | Dark | SystemScheme
-
+type ColorScheme
+    = Light
+    | Dark
+    | SystemScheme
 
 
 main_ : Layout -> ColorScheme -> List (Html.Attribute msg) -> List (Html msg) -> Html msg
 main_ layout colorScheme attrs children =
-  let
-      schemeClass =
-        case colorScheme of
-            Light ->
-                ["light"]
+    let
+        schemeClass =
+            case colorScheme of
+                Light ->
+                    [ attribute "data-theme" "light" ]
 
-            Dark ->
-                ["dark"]
+                Dark ->
+                    [ attribute "data-theme" "dark" ]
 
-            SystemScheme ->
-                []
-      classes =
-        ((layoutClass layout) :: schemeClass)
-        |> String.join " " 
-        |> class
+                SystemScheme ->
+                    []
 
-  in
-
+        attrs_ =
+            List.concat
+                [ [ class <| layoutClass layout ]
+                , schemeClass
+                , attrs
+                ]
+    in
     Html.main_
-      (classes :: attrs)
-      children
+        attrs_
+        children
 
 
 cdnUrl : Theme -> String
@@ -100,6 +134,8 @@ cdnUrl theme =
         ]
 
 
+{-| The name of the theme
+-}
 themeName : Theme -> String
 themeName theme =
     case theme of
