@@ -4,27 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Picomponents Documentation</title>
+  <script src="picomponents.js"></script>
   <script src="main.js"></script>
   <style>
+
+.inline-examples .grid {
+  margin-bottom: var(--pico-block-spacing-vertical);
+}
+
 /* Elm Syntax Highlight CSS */
 pre.elmsh {
-  padding: 10px;
+  font-size: 0.8em;
+  padding: 1em;
   margin: 0;
   text-align: left;
   overflow: auto;
+  code {
+    padding: 0;
+  }
 }
 
 code.elmsh {
   padding: 0;
 }
 
-.elmsh-line:before {
+.with-line-numbers .elmsh-line:before {
   content: attr(data-elmsh-lc);
   display: inline-block;
   text-align: right;
   width: 40px;
   padding: 0 20px 0 0;
   opacity: 0.3;
+}
+
+.logo {
+  font-familiy: "Futura", sans-serif;
 }
   </style>
 </head>
@@ -35,9 +49,49 @@ code.elmsh {
   var app = Elm.Main.init({
     node: document.getElementById('myapp')
   });
+
   </script>
   <script data-goatcounter="https://goatcounter.axelerator.de/count"
         async src="//goatcounter.axelerator.de/count.js"></script>
-
+  <style>
+main {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 10.5rem 1fr;
+  grid-template-areas:
+    "menu body";
+  #content {
+    grid-area: body;
+  }
+  > aside {
+    grid-area: menu;
+    position: sticky;
+    top: calc(var(--pico-main-top-offset) + var(--pico-block-spacing-vertical)/2);
+    top: 0;
+    max-height: calc(var(--max-height) - var(--pico-spacing));
+    overflow: auto;
+    transition: top var(--pico-transition);
+    transition-delay: 50ms;
+    align-self: start;
+    --pico-font-size: 0.9rem;
+    font-size: var(--pico-font-size);
+    ul {
+      padding-left: 1em;
+      padding-top: 0.25em;
+    }
+    li {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+  }
+}
+section {
+  margin-bottom: calc(3 * var(--pico-block-spacing-vertical));
+  padding-bottom: calc(var(--pico-block-spacing-vertical));
+  border: 1px solid var(--pico-secondary-border);
+  border-width: 0 0 1px 0;
+}
+</style>
+<p onClick="document.getElementById('modal').setAttribute('open', {})">Open Modal</p>
 </body>
 </html>

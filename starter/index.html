@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/pico.cyan.min.css">
+    <script src="picomponents.js"></script>
+    <script src="main.js"></script>
+    <body>
+      <div id="debug">
+        <b>The following is just debugging info to be dispayed when trying to open the <code>index.html</code> file directly in the browser
+          (which doesn't work). <br>Remove this <code>&lt;div&gt;</code>  when your app is working.</b>
+            <p>
+            Apps using 
+            <a href="https://package.elm-lang.org/packages/elm/browser/latest/Browser#application">
+              <code>Browser.application</code>
+            </a> must be served by a HTTP server because they need to know the root of the URL and 
+            that doesn't work with file URLs. If you look into the JS console you'll see an error like this.
+            <pre>
+      Error: Browser.application programs cannot handle URLs like this:
+
+          file:///Users/.../picomponents/starter/index.html
+
+      What is the root? The root of your file system? Try looking at this program with `elm reactor` or some other server.
+            </pre>
+            There are several easy ways to fix this, here are two of them:
+            </p>
+            <ol>
+              <li>If you already have Python installed you can start a server with <code>python -m http.server</code>` from the project root</li>
+              <li>Install <a href="https://caddyserver.com/docs/install">Caddy</a> and run <code>caddy run</code>. This project includes a `Caddyfile` file so it will even make sure "non-root" URLs continue to work.</li>
+            </ol>
+      </div>
+      <script>
+        var rememberMe = localStorage.getItem("rememberMe");
+        if (rememberMe) { rememberMe = JSON.parse(rememberMe); }
+
+        var preferences = localStorage.getItem("preferences");
+        if (preferences) { preferences = JSON.parse(preferences); }
+
+        const flags = {
+          rememberMe: rememberMe,
+          preferences: preferences
+        };
+        console.log(flags);
+
+        const app = Elm.Main.init({flags: flags}); 
+        app.ports.sendToJs.subscribe((args) => {
+          const [cmdName, payload] = args;
+          switch (cmdName) {
+            case "storePreferences":
+              localStorage.setItem("preferences", JSON.stringify(payload));
+              break;
+            case "storeRememberMe":
+              localStorage.setItem("rememberMe", JSON.stringify(payload));
+              break;
+            case "removeRememberMe":
+              localStorage.removeItem("rememberMe");
+          }
+        })
+      </script>
+    </body>
+</html>

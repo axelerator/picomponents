@@ -19,7 +19,8 @@
             "elm/url": "1.0.0",
             "elm-explorations/markdown": "1.0.0",
             "justinmimbs/date": "4.1.0",
-            "pablohirafuji/elm-syntax-highlight": "3.5.0"
+            "pablohirafuji/elm-syntax-highlight": "3.5.0",
+            "phosphor-icons/phosphor-elm": "2.1.0"
         },
         "indirect": {
             "elm/random": "1.0.0",
