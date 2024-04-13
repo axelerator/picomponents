@@ -262,8 +262,8 @@ view model =
             [ div [ containerClass model ]
                 [ nav
                     [ [ [ picomponentsSvg ] ]
-                    , [ [ secondaryLink [ href "#" ] [ githubSvg ] ]
-                      , [ secondaryLink [ href "#" ] [ elmSvg ] ]
+                    , [ [ secondaryLink [ href "https://github.com/axelerator/picomponents" ] [ githubSvg ] ]
+                      , [ secondaryLink [ href "https://package.elm-lang.org/packages/axelerator/picomponents/latest" ] [ elmSvg ] ]
                       ]
                     ]
                 ]
