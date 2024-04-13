@@ -1,6 +1,6 @@
 # Picomponents
 
-[Package Docs](https://package.elm-lang.org/packages/axelerator/picomponents/latest) | [Documentation](https://blog.axelerator.de/picomponents)
+[Package Docs](https://package.elm-lang.org/packages/axelerator/picomponents/latest) | [Documentation](https://blog.axelerator.de/picomponents) | [Starter Code Template](https://github.com/axelerator/picomponents-starter) | [Starter Demo](https://blog.axelerator.de/picomponents-starter)
 
 Picomponents is a UI component library using the brilliant [pico CSS framework](https://picocss.com).
 
