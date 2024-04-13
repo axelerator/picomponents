@@ -41,10 +41,13 @@ module Pico exposing
 
 @docs primaryLink, secondaryLink, contrastLink, asButton
 
+### Tables
+
+@docs Row, Cell, table
 
 ### Components
 
-@docs accordion, dropdown
+@docs accordion, dropdown, nav, Column
 
 
 ### Tooltips
@@ -59,7 +62,7 @@ module Pico exposing
 
 # Utilities
 
-@docs role, br, aria, errorView, rtl, ltr
+@docs role, br, hr, aria, errorView, rtl, ltr
 
 -}
 
@@ -355,7 +358,7 @@ aria name value =
 {-| Creates a [simple responseive grid](https://picocss.com/docs/grid)
 with the given class name.
 -}
-grid : String -> List (List (Html msg)) -> Html msg
+grid : String -> Row msg -> Html msg
 grid className cols =
     Html.div
         [ class "grid", class className ]
@@ -410,10 +413,18 @@ tooltipBottom c =
     [ attribute "data-tooltip" c, attribute "data-placement" "bottom" ]
 
 
+{-| A (table) cell can contain multiple Html elements.
+    This is just an alias to make the type signature of
+    functions that can receive it more readable.
+-} 
 type alias Cell msg =
     List (Html msg)
 
-
+{-| A (table) row can contain multiple cells that 
+    can contain multiple Html elements.
+    This is just an alias to make the type signature of
+    functions that can receive it more readable.
+-}
 type alias Row msg =
     List (Cell msg)
 
@@ -423,14 +434,22 @@ mkTr cells =
     tr [] <|
         List.map (\c -> td [] c) cells
 
-
+{-| A helper to construct a table in a more concise way.
+  It takes the attributes for the table, the header row and
+  the list of rows.
+-}
 table : List (Attribute msg) -> Row msg -> List (Row msg) -> Html msg
 table attrs header rows =
-    Html.table []
+    Html.table attrs
         [ thead [] [ tr [] <| List.map (\h -> th [] h) header ]
         , tbody [] <| List.map mkTr rows
         ]
 
+{-| A grid column can contain multiple cells that
+    can contain multiple Html elements.
+    This is just an alias to make the type signature of
+    functions that can receive `Columns` more readable.
+-}
 type alias Column msg =
     List (Cell msg)
 
@@ -439,6 +458,10 @@ mkColumn columns =
     ul [] <|
         List.map (\c -> li [] c) columns
 
+{-| A helper to construct a `nav` element in a more concise way.
+    In [Pico.css](https://picocss.com/docs/nav) the `nav` element
+    is laid out as a list of columns.
+-}
 nav : List (Column msg) -> Html msg
 nav columns =
     Html.nav [] 
@@ -455,6 +478,9 @@ mkLi : Cell msg -> Html msg
 mkLi cell =
     li [] cell
 
+{-| Pico uses the [details element](https://picocss.com/docs/dropdown) as markdown for a dropdown.
+This function lets you create a dropdown from the "collapsed" content and a multiple items to display in the expanded state.
+-}
 dropdown : Cell msg -> Column msg -> Html msg
 dropdown summaryContent dropdownRows =
     Html.details 
