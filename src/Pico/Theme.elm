@@ -1,4 +1,9 @@
 module Pico.Theme exposing (Theme(..), themes, ColorScheme(..), themeName)
+{-| Provides access to [Themes](https://picocss.com/docs/version-picker)
+    and [Color Schemes](https://picocss.com/docs/color-schemes)
+
+@docs ColorScheme, Theme, themes, themeName
+-}
 
 
 {-| Pico CSS comes with both Light and Dark color schemes, automatically enabled based on user preferences.
