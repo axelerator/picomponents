@@ -5864,10 +5864,6 @@ var $elm$json$Json$Encode$list = F2(
 				_Json_emptyArray(_Utils_Tuple0),
 				entries));
 	});
-var $elm$core$Debug$log = _Debug_log;
-var $elm$core$Basics$negate = function (n) {
-	return -n;
-};
 var $elm$core$List$takeReverse = F3(
 	function (n, list, kept) {
 		takeReverse:
@@ -6037,17 +6033,8 @@ var $axelerator$fancy_forms$FancyForms$Form$encodedUpdate = F5(
 				case 'Add':
 					if (_v0.b.$ === 'ArrayElement') {
 						var _v1 = _v0.a;
-						var _v2 = A2($elm$core$Debug$log, 'Adding', 'ArrayElement');
 						return _Utils_Tuple2(
 							function (list) {
-								var _v3 = A2(
-									$elm$core$Debug$log,
-									'Adding',
-									_List_fromArray(
-										[
-											widget.init(
-											A2($elm$core$Maybe$withDefault, widget._default, mbTemplate))
-										]));
 								return A2(
 									$elm$json$Json$Encode$list,
 									encodeModel,
@@ -6072,7 +6059,7 @@ var $axelerator$fancy_forms$FancyForms$Form$encodedUpdate = F5(
 					}
 				case 'Remove':
 					if (_v0.b.$ === 'ArrayElement') {
-						var _v4 = _v0.a;
+						var _v2 = _v0.a;
 						var i = _v0.b.a;
 						return _Utils_Tuple2(
 							A2(
@@ -6096,44 +6083,28 @@ var $axelerator$fancy_forms$FancyForms$Form$encodedUpdate = F5(
 					}
 				default:
 					var msgVal = _v0.a.a;
-					var sf = _v0.b;
-					var _v5 = _Utils_Tuple2(
+					var _v3 = _Utils_Tuple2(
 						A2($elm$json$Json$Decode$decodeValue, decoderMsg, msgVal),
 						A2($elm$json$Json$Decode$decodeValue, decodeSubfield, modelVal));
-					if (_v5.a.$ === 'Ok') {
-						if (_v5.b.$ === 'Ok') {
-							var msg = _v5.a.a;
-							var model = _v5.b.a;
+					if (_v3.a.$ === 'Ok') {
+						if (_v3.b.$ === 'Ok') {
+							var msg = _v3.a.a;
+							var model = _v3.b.a;
 							var updateResult = A2(widget.update, msg, model);
-							var _v6 = A2(
-								$elm$core$Debug$log,
-								'update3',
-								_Utils_Tuple2(msg, model));
 							return _Utils_Tuple2(
 								encodeSubfield(updateResult.model),
 								updateResult.effect);
 						} else {
-							var msg = _v5.a.a;
-							var e = _v5.b;
+							var msg = _v3.a.a;
 							var updateResult = A2(
 								widget.update,
 								msg,
 								widget.init(widget._default));
-							var _v7 = A2($elm$core$Debug$log, 'update2', e);
 							return _Utils_Tuple2(
 								encodeSubfield(updateResult.model),
 								updateResult.effect);
 						}
 					} else {
-						var e1 = _v5.a;
-						var e2 = _v5.b;
-						var _v8 = A2(
-							$elm$core$Debug$log,
-							'update1',
-							_Utils_Tuple3(
-								sf,
-								e1,
-								A2($elm$json$Json$Encode$encode, -1, msgVal)));
 						return _Utils_Tuple2(modelVal, $axelerator$fancy_forms$FancyForms$FormState$NoEffect);
 					}
 			}
@@ -6812,10 +6783,6 @@ var $axelerator$fancy_forms$FancyForms$Form$toWidget = function (f) {
 				var fieldId = m.a;
 				var subfieldId = m.b;
 				var fieldOperation = m.c;
-				var _v0 = A2(
-					$elm$core$Debug$log,
-					'toWidget.decoderMsg',
-					_Utils_Tuple3(fieldId, subfieldId, fieldOperation));
 				return $elm$json$Json$Decode$succeed(m);
 			},
 			$axelerator$fancy_forms$FancyForms$Form$decoderFormMsg),
@@ -6829,14 +6796,10 @@ var $axelerator$fancy_forms$FancyForms$Form$toWidget = function (f) {
 		innerAttributes: $axelerator$fancy_forms$FancyForms$FormState$noAttributes,
 		isConsistent: f.isConsistent,
 		update: F2(
-			function (_v1, model) {
-				var fieldId = _v1.a;
-				var subfieldId = _v1.b;
-				var value = _v1.c;
-				var _v2 = A2(
-					$elm$core$Debug$log,
-					'toWidget.update',
-					_Utils_Tuple3(fieldId, subfieldId, value));
+			function (_v0, model) {
+				var fieldId = _v0.a;
+				var subfieldId = _v0.b;
+				var value = _v0.c;
 				return $axelerator$fancy_forms$FancyForms$FormState$justChanged(
 					A5($axelerator$fancy_forms$FancyForms$Form$updateField, f, fieldId, subfieldId, value, model));
 			}),
@@ -7191,7 +7154,7 @@ var $axelerator$fancy_forms$FancyForms$Form$mkField = F3(
 				}(
 					widget.encodeMsg(msg));
 			};
-			var fieldErrors = A3($axelerator$fancy_forms$FancyForms$FormState$wasAtLeast, $axelerator$fancy_forms$FancyForms$FormState$Blurred, fieldId, formState) ? errors_(formState) : A2($elm$core$Debug$log, 'was not blurred', _List_Nil);
+			var fieldErrors = A3($axelerator$fancy_forms$FancyForms$FormState$wasAtLeast, $axelerator$fancy_forms$FancyForms$FormState$Blurred, fieldId, formState) ? errors_(formState) : _List_Nil;
 			var innerAttrs = A2(
 				$elm$core$Maybe$withDefault,
 				_List_Nil,
@@ -7409,37 +7372,6 @@ var $author$project$Main$emailForm = A3(
 					})
 			};
 		}));
-var $elm$core$Dict$map = F2(
-	function (func, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return $elm$core$Dict$RBEmpty_elm_builtin;
-		} else {
-			var color = dict.a;
-			var key = dict.b;
-			var value = dict.c;
-			var left = dict.d;
-			var right = dict.e;
-			return A5(
-				$elm$core$Dict$RBNode_elm_builtin,
-				color,
-				key,
-				A2(func, key, value),
-				A2($elm$core$Dict$map, func, left),
-				A2($elm$core$Dict$map, func, right));
-		}
-	});
-var $axelerator$fancy_forms$FancyForms$Form$debugFormState = function (fs) {
-	var values = fs.a.values;
-	var dbg = F2(
-		function (k, v) {
-			return A2(
-				$elm$core$Debug$log,
-				k,
-				A2($elm$json$Json$Encode$encode, -1, v));
-		});
-	var _v0 = A2($elm$core$Dict$map, dbg, values);
-	return fs;
-};
 var $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$selectorFieldId = 'selectorValue';
 var $elm$core$Dict$singleton = F2(
 	function (key, value) {
@@ -7470,20 +7402,12 @@ var $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidgetInit =
 		return $axelerator$fancy_forms$FancyForms$FormState$FormState(
 			{allBlurred: false, fieldStatus: $elm$core$Dict$empty, parentDomId: '0', values: values_});
 	});
-var $axelerator$fancy_forms$FancyForms$Form$extractVariantInit = F5(
-	function (variantsWithWidgets, fieldId, valueExtractor, formModel, formState) {
-		var variantNameExtractor = function (v) {
-			var _v1 = valueExtractor(v);
-			var variantName_ = _v1.a;
-			return variantName_;
-		};
-		var _v0 = valueExtractor(formModel);
-		var variantName = _v0.a;
-		var value = _v0.b;
+var $axelerator$fancy_forms$FancyForms$Form$extractVariantInit = F6(
+	function (variantsWithWidgets, fieldId, valueExtractor, variantNameExtractor, formModel, formState) {
+		var value = valueExtractor(formModel);
 		var encodedValue = $axelerator$fancy_forms$FancyForms$FormState$formStateEncode(
 			A3($axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidgetInit, variantsWithWidgets, variantNameExtractor, value));
-		return $axelerator$fancy_forms$FancyForms$Form$debugFormState(
-			A4($axelerator$fancy_forms$FancyForms$FormState$write, fieldId, $axelerator$fancy_forms$FancyForms$FormState$SingleValue, formState, encodedValue));
+		return A4($axelerator$fancy_forms$FancyForms$FormState$write, fieldId, $axelerator$fancy_forms$FancyForms$FormState$SingleValue, formState, encodedValue);
 	});
 var $coreygirard$elm_nonempty_list$List$Nonempty$map = F2(
 	function (f, _v0) {
@@ -7598,7 +7522,6 @@ var $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$selectedValue = F3(
 					selectedWidget.decoderModel,
 					A2($axelerator$fancy_forms$FancyForms$FormState$read, selectedVariantName, model))));
 	});
-var $elm$core$Debug$todo = _Debug_todo;
 var $axelerator$fancy_forms$FancyForms$FormState$encodedUpdate = F4(
 	function (widget, subfieldId, operation, modelVal) {
 		var decoderMsg = widget.decoderMsg;
@@ -7650,13 +7573,7 @@ var $axelerator$fancy_forms$FancyForms$FormState$encodedUpdate = F4(
 									list,
 									_List_fromArray(
 										[
-											widget.init(
-											_Debug_todo(
-												'FancyForms.FormState',
-												{
-													start: {line: 453, column: 49},
-													end: {line: 453, column: 59}
-												})('needs template object'))
+											widget.init(widget._default)
 										])));
 						}(
 							A2(
@@ -7696,16 +7613,11 @@ var $axelerator$fancy_forms$FancyForms$FormState$encodedUpdate = F4(
 					var _v3 = _Utils_Tuple2(
 						A2($elm$json$Json$Decode$decodeValue, decoderMsg, msgVal),
 						A2($elm$json$Json$Decode$decodeValue, decodeSubfield, modelVal));
-					if (_v3.a.$ === 'Ok') {
-						if (_v3.b.$ === 'Ok') {
-							var msg = _v3.a.a;
-							var model = _v3.b.a;
-							return encodeSubfield(
-								A2(widget.update, msg, model).model);
-						} else {
-							var msg = _v3.a.a;
-							return modelVal;
-						}
+					if ((_v3.a.$ === 'Ok') && (_v3.b.$ === 'Ok')) {
+						var msg = _v3.a.a;
+						var model = _v3.b.a;
+						return encodeSubfield(
+							A2(widget.update, msg, model).model);
 					} else {
 						return modelVal;
 					}
@@ -7848,9 +7760,7 @@ var $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidget = F4(
 			_default: $coreygirard$elm_nonempty_list$List$Nonempty$head(variantWidgets).b._default,
 			encodeModel: $axelerator$fancy_forms$FancyForms$FormState$formStateEncode,
 			encodeMsg: $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$encodeMsg,
-			init: function (v) {
-				return A3($axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidgetInit, variantWidgets, variantNameExtractor, v);
-			},
+			init: A2($axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidgetInit, variantWidgets, variantNameExtractor),
 			innerAttributes: $axelerator$fancy_forms$FancyForms$FormState$noAttributes,
 			isConsistent: function (_v0) {
 				return true;
@@ -7869,8 +7779,8 @@ var $axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidget = F4(
 				$coreygirard$elm_nonempty_list$List$Nonempty$toList(variantWidgets))
 		};
 	});
-var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F5(
-	function (variantSelector, defaultVariant, otherVariants, extractDefault, _v0) {
+var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F6(
+	function (extractDefault, variantSelector, defaultVariant, otherVariants, extractVariantName, _v0) {
 		var fn = _v0.fn;
 		var count = _v0.count;
 		var updates = _v0.updates;
@@ -7880,9 +7790,6 @@ var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F5(
 		var domId = _v0.domId;
 		var isConsistent = _v0.isConsistent;
 		var initWithData = _v0.initWithData;
-		var variantNameExtractor = function (data) {
-			return extractDefault(data).a;
-		};
 		var toWidgetVariant = function (_v2) {
 			var n = _v2.a;
 			var f = _v2.b;
@@ -7901,7 +7808,7 @@ var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F5(
 			$axelerator$fancy_forms$FancyForms$Widgets$VariantSelect$variantWidget,
 			variantSelector(
 				A2($coreygirard$elm_nonempty_list$List$Nonempty$map, mkVariant, variantsWithWidgets)),
-			variantNameExtractor,
+			extractVariantName,
 			$coreygirard$elm_nonempty_list$List$Nonempty$head(variantsWithWidgets).a,
 			variantsWithWidgets);
 		var fieldId = $elm$core$String$fromInt(count);
@@ -7918,7 +7825,7 @@ var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F5(
 			initWithData: A2(
 				$axelerator$fancy_forms$FancyForms$Form$extendInit,
 				initWithData,
-				A3($axelerator$fancy_forms$FancyForms$Form$extractVariantInit, variantsWithWidgets, fieldId, extractDefault)),
+				A4($axelerator$fancy_forms$FancyForms$Form$extractVariantInit, variantsWithWidgets, fieldId, extractDefault, extractVariantName)),
 			isConsistent: A2(
 				$axelerator$fancy_forms$FancyForms$Form$extendConsistencyCheck,
 				isConsistent,
@@ -7931,13 +7838,6 @@ var $axelerator$fancy_forms$FancyForms$Form$fieldWithVariants = F5(
 			validator: validator
 		};
 	});
-var $author$project$Main$initFromForm = function (c) {
-	if (c.$ === 'Email') {
-		return _Utils_Tuple2('E-Mail', c);
-	} else {
-		return _Utils_Tuple2('Phone number', c);
-	}
-};
 var $author$project$Main$Phone = function (a) {
 	return {$: 'Phone', a: a};
 };
@@ -8159,15 +8059,22 @@ var $author$project$Main$phoneForm = A3(
 							})
 					};
 				}))));
-var $author$project$Main$variantForm = A5(
+var $author$project$Main$variantForm = A6(
 	$axelerator$fancy_forms$FancyForms$Form$fieldWithVariants,
+	$elm$core$Basics$identity,
 	$author$project$Pico$Form$dropdown('Contact'),
 	_Utils_Tuple2('E-Mail', $author$project$Main$emailForm),
 	_List_fromArray(
 		[
 			_Utils_Tuple2('Phone number', $author$project$Main$phoneForm)
 		]),
-	$author$project$Main$initFromForm,
+	function (c) {
+		if (c.$ === 'Email') {
+			return 'E-Mail';
+		} else {
+			return 'Phone number';
+		}
+	},
 	A4(
 		$axelerator$fancy_forms$FancyForms$Form$form,
 		F2(
@@ -8324,6 +8231,9 @@ var $elm$parser$Parser$Advanced$fromState = F2(
 			A4($elm$parser$Parser$Advanced$DeadEnd, s.row, s.col, x, s.context));
 	});
 var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
+var $elm$core$Basics$negate = function (n) {
+	return -n;
+};
 var $elm$parser$Parser$Advanced$chompIf = F2(
 	function (isGood, expecting) {
 		return $elm$parser$Parser$Advanced$Parser(
@@ -10177,7 +10087,7 @@ var $author$project$Pico$grid = F2(
 	});
 var $axelerator$fancy_forms$FancyForms$FormState$MustNotBeBlank = {$: 'MustNotBeBlank'};
 var $axelerator$fancy_forms$FancyForms$Widgets$Text$notBlank = function (model) {
-	return (A2($elm$core$Debug$log, 'notBlank', model) === '') ? _List_fromArray(
+	return (model === '') ? _List_fromArray(
 		[$axelerator$fancy_forms$FancyForms$FormState$MustNotBeBlank]) : _List_Nil;
 };
 var $elm$html$Html$Attributes$step = function (n) {
@@ -12900,10 +12810,6 @@ var $axelerator$fancy_forms$FancyForms$Form$update = F3(
 		var fieldId = _v0.a;
 		var subfieldId = _v0.b;
 		var op = _v0.c;
-		var _v1 = A2(
-			$elm$core$Debug$log,
-			'Form.update',
-			_Utils_Tuple3(fieldId, subfieldId, op));
 		return A5($axelerator$fancy_forms$FancyForms$Form$updateField, form_, fieldId, subfieldId, op, formState);
 	});
 var $author$project$Pico$Modal$IsOpen = {$: 'IsOpen'};
@@ -15324,7 +15230,7 @@ var $author$project$Main$viewTypography = A2(
 			$author$project$Main$markdownInfo
 		]));
 var $author$project$Main$VariantForm = {$: 'VariantForm'};
-var $author$project$Main$variantFormCodeStr = 'variantForm : Form Contact MyError\nvariantForm =\n    Form.form\n        (\\_ html -> html) -- no custom errors to display\n        alwaysValid -- any contact is valid\n        "variant-example"\n        (\\contact ->\n            { view = \\formState _ -> contact.view formState\n            , combine = \\formState -> contact.value formState\n            }\n        )\n        |> fieldWithVariants (dropdown "Contact") -- widget to select variant\n            ( "E-Mail", emailForm )           -- first variant\n            [ ( "Phone number", phoneForm ) ] -- other variants\n            initFromForm                      -- function to extract variant from form state\n\ninitFromForm : Contact -> ( String, Contact )\ninitFromForm c =\n    case c of\n        Email _ -> ( "E-Mail", c )\n        Phone _ -> ( "Phone number", c )\n\nemailForm : Form Contact MyError\nemailForm =\n    Form.form\n        (\\_ html -> html) -- no custom errors to display\n        alwaysValid -- no custom validations\n        "email-form"\n        (\\email ->\n            { view = \\formState _ -> email.view formState\n            , combine = \\formState -> Email <| email.value formState\n            }\n        )\n        |> field emailOrEmpty (Pico.Form.textInput "E-Mail address")\n\nemailOrEmpty : Contact -> String\nemailOrEmpty c =\n    case c of\n        Email email -> email\n        _ -> ""\n\nphoneForm : Form Contact MyError\nphoneForm =\n    Form.form\n        (\\_ html -> html) -- no custom errors to display\n        alwaysValid -- no custom validations\n        "email-form"\n        (\\countryCode number ->\n            { view =\n                \\formState _ ->\n                    [ div [ class "grid" ]\n                        [ div [] <| countryCode.view formState\n                        , div [] <| number.view formState\n                        ]\n                    ]\n            , combine = \\formState -> Phone \n                { countryCode = (countryCode.value formState)\n                , number = (number.value formState)\n                }\n            }\n        )\n        |> field (numberDetails >> .countryCode) (Pico.Form.integerInput "Country code")\n        |> field (numberDetails >> .number) (Pico.Form.integerInput "Number")\n\nnumberDetails : Contact -> { countryCode: Int, number: Int }\nnumberDetails c =\n    case c of\n        Email _ -> { countryCode = 0 , number = 0 }\n        Phone details-> details\n';
+var $author$project$Main$variantFormCodeStr = 'variantForm : Form Contact MyError\nForm.form\n    (\\_ html -> html) -- no custom errors to display\n    alwaysValid -- any contact is valid\n    "variant-example"\n    (\\contact ->\n        { view = \\formState _ -> contact.view formState\n        , combine = \\formState -> contact.value formState\n        }\n    )\n    |> fieldWithVariants identity (dropdown "Contact")\n        ( "E-Mail", emailForm )\n        [ ( "Phone number", phoneForm ) ]\n        (\\c ->\n            case c of\n                Email _ ->\n                    "E-Mail"\n\n                Phone _ ->\n                    "Phone number"\n        )\n\nemailForm : Form Contact MyError\nemailForm =\n    Form.form\n        (\\_ html -> html) -- no custom errors to display\n        alwaysValid -- no custom validations\n        "email-form"\n        (\\email ->\n            { view = \\formState _ -> email.view formState\n            , combine = \\formState -> Email <| email.value formState\n            }\n        )\n        |> field emailOrEmpty (Pico.Form.textInput "E-Mail address")\n\nemailOrEmpty : Contact -> String\nemailOrEmpty c =\n    case c of\n        Email email -> email\n        _ -> ""\n\nphoneForm : Form Contact MyError\nphoneForm =\n    Form.form\n        (\\_ html -> html) -- no custom errors to display\n        alwaysValid -- no custom validations\n        "email-form"\n        (\\countryCode number ->\n            { view =\n                \\formState _ ->\n                    [ div [ class "grid" ]\n                        [ div [] <| countryCode.view formState\n                        , div [] <| number.view formState\n                        ]\n                    ]\n            , combine = \\formState -> Phone \n                { countryCode = (countryCode.value formState)\n                , number = (number.value formState)\n                }\n            }\n        )\n        |> field (numberDetails >> .countryCode) (Pico.Form.integerInput "Country code")\n        |> field (numberDetails >> .number) (Pico.Form.integerInput "Number")\n\nnumberDetails : Contact -> { countryCode: Int, number: Int }\nnumberDetails c =\n    case c of\n        Email _ -> { countryCode = 0 , number = 0 }\n        Phone details-> details\n';
 var $author$project$Main$viewVariants = function (model) {
 	return A2(
 		$elm$html$Html$section,
