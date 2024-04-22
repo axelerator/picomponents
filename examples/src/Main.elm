@@ -3,8 +3,8 @@ module Main exposing (main)
 import Browser exposing (Document)
 import Browser.Navigation exposing (Key)
 import Date exposing (Date)
-import FancyForms.Form as Form exposing (Form, Variants, extract, field, form, listField, fieldWithVariants, render, validate)
-import FancyForms.FormState exposing (Error(..), FormState, Validator, alwaysValid)
+import FancyForms.Form as Form exposing (Form, Variants, extract, field, fieldWithVariants, form, listField, render, validate)
+import FancyForms.FormState exposing (Error(..), FormState, Validator, alwaysValid, withBlur)
 import FancyForms.Widgets.Int exposing (greaterThan)
 import FancyForms.Widgets.Text exposing (notBlank)
 import Html exposing (Html, a, article, aside, button, code, div, em, fieldset, footer, h1, h2, h3, header, input, li, node, p, pre, section, small, span, td, text, tr, ul, wbr)
@@ -64,7 +64,6 @@ import Svg exposing (path, svg)
 import Svg.Attributes as SvgAttr
 import SyntaxHighlight as SH
 import Url exposing (Url)
-import FancyForms.FormState exposing (withBlur)
 
 
 main : Program () Model Msg
@@ -149,8 +148,10 @@ update msg model =
 
                         ListForm ->
                             { model | listFormState = Form.update listForm fMsg model.listFormState }
+
                         VariantForm ->
                             { model | variantFormState = Form.update variantForm fMsg model.variantFormState }
+
                         ComboForm ->
                             { model | combinedFormState = Form.update combinedForm fMsg model.combinedFormState }
             in
@@ -200,14 +201,13 @@ init _ =
       , exampleFormState = Form.init exampleForm initExampleForm
       , listFormState = Form.init listForm [ "Get out of bed!" ]
       , variantFormState = Form.init variantForm initVariantForm
-      , combinedFormState = Form.init combinedForm ([Email "bFQpR@example.com"])
+      , combinedFormState = Form.init combinedForm [ Email "bFQpR@example.com" ]
       , buttonOutline = False
       , linksAsButtons = False
       , testModal = { state = Modal.init, content = NothingYet }
       }
     , Cmd.none
     )
-
 
 
 leftNav model =
@@ -963,11 +963,13 @@ We also have to specify the UI elements for adding and removing values.
 Here is an example that collects a list of `String` values.
 """
               ]
-            , [accordion [ asButton, class "secondary" ] [ text "View code" ] [ viewCode True listFormCodeStr ]]
+            , [ accordion [ asButton, class "secondary" ] [ text "View code" ] [ viewCode True listFormCodeStr ] ]
             , render (ForForm ListForm) listForm model.listFormState
             ]
 
-listFormCodeStr = """listForm : Form (List String) MyError
+
+listFormCodeStr =
+    """listForm : Form (List String) MyError
 listForm =
     Form.form
         (\\_ html -> html) -- no validations, no errors to display
@@ -1000,11 +1002,14 @@ listWithAddButton addMsg items =
     ]
 """
 
+
 listForm : Form (List String) MyError
 listForm =
     Form.form
-        (\_ html -> html) -- omitting errors for brevity
-        alwaysValid -- no custom validations
+        (\_ html -> html)
+        -- omitting errors for brevity
+        alwaysValid
+        -- no custom validations
         "lists-example"
         (\todos ->
             { view = \formState _ -> todos.view formState
@@ -1035,30 +1040,33 @@ listWithAddButton addMsg items =
 
 viewVariants : Model -> Html Msg
 viewVariants model =
-    section []
-        <| List.concat
-            [ [h3 [] [ text "Variants" ]]
+    section [] <|
+        List.concat
+            [ [ h3 [] [ text "Variants" ] ]
             , [ grid ""
-                [ [markdown """Consider this example where we want to collect a `Contact` that can be either an `Email` or a `Phone`.
+                    [ [ markdown """Consider this example where we want to collect a `Contact` that can be either an `Email` or a `Phone`.
 In this case the form will look different depending on which variant is selected.
-"""]
-                , [viewCode False """type Contact
+""" ]
+                    , [ viewCode False """type Contact
     = Email String
     | Phone { countryCode: Int, number: Int }
-"""]
-                ]
+""" ]
+                    ]
               ]
-            , [accordion [ asButton, class "secondary" ] [ text "View full code" ] [ viewCode True variantFormCodeStr ]]
+            , [ accordion [ asButton, class "secondary" ] [ text "View full code" ] [ viewCode True variantFormCodeStr ] ]
             , render (ForForm VariantForm) variantForm model.variantFormState
             ]
 
+
 initVariantForm : Contact
-initVariantForm = Email ""
-    
+initVariantForm =
+    Email ""
+
 
 type Contact
     = Email String
-    | Phone { countryCode: Int, number: Int }
+    | Phone { countryCode : Int, number : Int }
+
 
 variantForm : Form Contact MyError
 variantForm =
@@ -1071,41 +1079,52 @@ variantForm =
             , combine = \formState -> contact.value formState
             }
         )
-        |> fieldWithVariants (dropdown "Contact")
+        |> fieldWithVariants identity (dropdown "Contact")
             ( "E-Mail", emailForm )
             [ ( "Phone number", phoneForm ) ]
-            initFromForm
+            (\c ->
+                case c of
+                    Email _ ->
+                        "E-Mail"
 
-initFromForm : Contact -> ( String, Contact )
-initFromForm c =
-    case c of
-        Email _ -> ( "E-Mail", c )
-        Phone _ -> ( "Phone number", c )
+                    Phone _ ->
+                        "Phone number"
+            )
+
 
 emailForm : Form Contact MyError
 emailForm =
     Form.form
-        (\_ html -> html) -- no custom errors to display
-        alwaysValid -- no custom validations
+        (\_ html -> html)
+        -- no custom errors to display
+        alwaysValid
+        -- no custom validations
         "email-form"
         (\email ->
-            { view = \formState _ -> [div [] <|email.view formState]
+            { view = \formState _ -> [ div [] <| email.view formState ]
             , combine = \formState -> Email <| email.value formState
             }
         )
         |> field emailOrEmpty (Pico.Form.textInput "E-Mail address")
 
+
 emailOrEmpty : Contact -> String
 emailOrEmpty c =
     case c of
-        Email email -> email
-        _ -> ""
+        Email email ->
+            email
+
+        _ ->
+            ""
+
 
 phoneForm : Form Contact MyError
 phoneForm =
     Form.form
-        (\_ html -> html) -- no custom errors to display
-        alwaysValid -- no custom validations
+        (\_ html -> html)
+        -- no custom errors to display
+        alwaysValid
+        -- no custom validations
         "email-form"
         (\countryCode number ->
             { view =
@@ -1115,43 +1134,51 @@ phoneForm =
                         , div [] <| number.view formState
                         ]
                     ]
-            , combine = \formState -> Phone 
-                { countryCode = (countryCode.value formState)
-                , number = (number.value formState)
-                }
+            , combine =
+                \formState ->
+                    Phone
+                        { countryCode = countryCode.value formState
+                        , number = number.value formState
+                        }
             }
         )
         |> field (numberDetails >> .countryCode) (Pico.Form.integerInput "Country code")
         |> field (numberDetails >> .number) (Pico.Form.integerInput "Number")
 
-numberDetails : Contact -> { countryCode: Int, number: Int }
+
+numberDetails : Contact -> { countryCode : Int, number : Int }
 numberDetails c =
     case c of
-        Email _ -> { countryCode = 0 , number = 0 }
-        Phone details-> details
+        Email _ ->
+            { countryCode = 0, number = 0 }
+
+        Phone details ->
+            details
+
 
 variantFormCodeStr : String
-variantFormCodeStr = """variantForm : Form Contact MyError
-variantForm =
-    Form.form
-        (\\_ html -> html) -- no custom errors to display
-        alwaysValid -- any contact is valid
-        "variant-example"
-        (\\contact ->
-            { view = \\formState _ -> contact.view formState
-            , combine = \\formState -> contact.value formState
-            }
-        )
-        |> fieldWithVariants (dropdown "Contact") -- widget to select variant
-            ( "E-Mail", emailForm )           -- first variant
-            [ ( "Phone number", phoneForm ) ] -- other variants
-            initFromForm                      -- function to extract variant from form state
+variantFormCodeStr =
+    """variantForm : Form Contact MyError
+Form.form
+    (\\_ html -> html) -- no custom errors to display
+    alwaysValid -- any contact is valid
+    "variant-example"
+    (\\contact ->
+        { view = \\formState _ -> contact.view formState
+        , combine = \\formState -> contact.value formState
+        }
+    )
+    |> fieldWithVariants identity (dropdown "Contact")
+        ( "E-Mail", emailForm )
+        [ ( "Phone number", phoneForm ) ]
+        (\\c ->
+            case c of
+                Email _ ->
+                    "E-Mail"
 
-initFromForm : Contact -> ( String, Contact )
-initFromForm c =
-    case c of
-        Email _ -> ( "E-Mail", c )
-        Phone _ -> ( "Phone number", c )
+                Phone _ ->
+                    "Phone number"
+        )
 
 emailForm : Form Contact MyError
 emailForm =
@@ -1202,23 +1229,25 @@ numberDetails c =
         Phone details-> details
 """
 
+
 viewCombo : Model -> Html Msg
 viewCombo model =
-    section []
-        <| List.concat
-            [ [h3 [] [ text "Combinations" ]]
-            , [markdown """Consider this example """]
-            , [accordion [ asButton, class "secondary" ] [ text "View full code" ] [ viewCode True combinedFormCodeStr ]]
+    section [] <|
+        List.concat
+            [ [ h3 [] [ text "Combinations" ] ]
+            , [ markdown """Consider this example """ ]
+            , [ accordion [ asButton, class "secondary" ] [ text "View full code" ] [ viewCode True combinedFormCodeStr ] ]
             , render (ForForm ComboForm) combinedForm model.combinedFormState
             ]
-            
 
 
 combinedForm : Form (List Contact) MyError
 combinedForm =
     Form.form
-        (\_ html -> html) -- no custom errors to display
-        alwaysValid -- any contact is valid
+        (\_ html -> html)
+        -- no custom errors to display
+        alwaysValid
+        -- any contact is valid
         "variant-example"
         (\contact ->
             { view = \formState _ -> contact.view formState
@@ -1232,19 +1261,24 @@ combinedForm =
             identity
             (Form.toWidget variantForm)
 
+
 contactsWithAddButton addMsg items =
     [ div [] <|
         items
             ++ [ secondaryButton [ onClick addMsg ] [ text "Add contact" ] ]
     ]
+
+
 contactWithRemoveButton removeMsg input =
     [ article [] <|
         input
-            ++ [footer [] [ secondaryButton [ onClick removeMsg, outline ] [ text "Remove" ] ]]
+            ++ [ footer [] [ secondaryButton [ onClick removeMsg, outline ] [ text "Remove" ] ] ]
     ]
 
+
 combinedFormCodeStr : String
-combinedFormCodeStr = """combinedForm : Form (List Contact) MyError combinedForm =
+combinedFormCodeStr =
+    """combinedForm : Form (List Contact) MyError combinedForm =
     Form.form
         (\\_ html -> html) -- no custom errors to display
         alwaysValid -- any contact is valid
