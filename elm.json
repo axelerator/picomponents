@@ -3,7 +3,7 @@
     "name": "axelerator/picomponents",
     "summary": "A UI component library using the pico CSS framework",
     "license": "MIT",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "exposed-modules": [
         "Pico",
         "Pico.Form",
