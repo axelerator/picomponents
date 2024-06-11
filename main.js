@@ -12781,7 +12781,13 @@ var $author$project$Main$FormResult = function (a) {
 };
 var $author$project$Main$ModalExample = {$: 'ModalExample'};
 var $author$project$Pico$Modal$IsClosing = {$: 'IsClosing'};
-var $author$project$Pico$Modal$close = $author$project$Pico$Modal$IsClosing;
+var $author$project$Pico$Modal$close = function (modalState) {
+	if (modalState.$ === 'IsOpen') {
+		return $author$project$Pico$Modal$IsClosing;
+	} else {
+		return modalState;
+	}
+};
 var $axelerator$fancy_forms$FancyForms$Form$extract = function (_v0) {
 	var fn = _v0.fn;
 	return fn.combine;
@@ -12804,7 +12810,13 @@ var $axelerator$fancy_forms$FancyForms$Form$isValid = F2(
 					fn.combine(formState))));
 	});
 var $author$project$Pico$Modal$IsOpening = {$: 'IsOpening'};
-var $author$project$Pico$Modal$open = $author$project$Pico$Modal$IsOpening;
+var $author$project$Pico$Modal$open = function (modalState) {
+	if (modalState.$ === 'IsClosed') {
+		return $author$project$Pico$Modal$IsOpening;
+	} else {
+		return modalState;
+	}
+};
 var $axelerator$fancy_forms$FancyForms$Form$update = F3(
 	function (form_, _v0, formState) {
 		var fieldId = _v0.a;
@@ -12834,7 +12846,10 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							testModal: {content: $author$project$Main$ModalExample, state: $author$project$Pico$Modal$open}
+							testModal: {
+								content: $author$project$Main$ModalExample,
+								state: $author$project$Pico$Modal$open(model.testModal.state)
+							}
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'CloseModal':
@@ -12845,7 +12860,9 @@ var $author$project$Main$update = F2(
 						{
 							testModal: _Utils_update(
 								modal_,
-								{state: $author$project$Pico$Modal$close})
+								{
+									state: $author$project$Pico$Modal$close(modal_.state)
+								})
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'ForModal':
@@ -12908,7 +12925,7 @@ var $author$project$Main$update = F2(
 							testModal: {
 								content: $author$project$Main$FormResult(
 									A2($axelerator$fancy_forms$FancyForms$Form$extract, $author$project$Main$exampleForm, model.exampleFormState)),
-								state: $author$project$Pico$Modal$open
+								state: $author$project$Pico$Modal$open(model.testModal.state)
 							}
 						}),
 					$elm$core$Platform$Cmd$none) : _Utils_Tuple2(
@@ -13932,7 +13949,7 @@ var $author$project$Pico$aria = F2(
 	function (name, value) {
 		return A2($elm$html$Html$Attributes$attribute, 'aria-' + name, value);
 	});
-var $author$project$Main$modalExampleCode = '\ntype alias Model = { modalState : ModalState }\n\ninit = { modalState = Modal.init }\n\ntype Msg = OpenModal | ForModal Modal.Msg\n\nsubscriptions model = Modal.subscriptions\n\nupdate msg model =\n    case msg of\n        OpenModal ->\n            { model | modalState = Modal.open }\n        ForModal msg ->\n            { model \n            | modalState = Modal.update msg model.modalState\n            }\n\nview model =\n    div []\n        [ Modal.view model.modalState [text "modal content"]\n        , button [onClick OpenModal] [text "open modal"]\n        ]\n';
+var $author$project$Main$modalExampleCode = '\ntype alias Model = { modalState : ModalState }\n\ninit = { modalState = Modal.init }\n\ntype Msg = OpenModal | ForModal Modal.Msg\n\nsubscriptions model = Modal.subscriptions\n\nupdate msg model =\n    case msg of\n        OpenModal ->\n            { model | modalState = Modal.open model.modalState }\n        ForModal msg ->\n            { model \n            | modalState = Modal.update msg model.modalState\n            }\n\nview model =\n    div []\n        [ Modal.view model.modalState [text "modal content"]\n        , button [onClick OpenModal] [text "open modal"]\n        ]\n';
 var $author$project$Main$exampleModelContent = A2(
 	$elm$html$Html$article,
 	_List_Nil,
