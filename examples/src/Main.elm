@@ -111,7 +111,7 @@ update msg model =
         ShowModalExample ->
             ( { model
                 | testModal =
-                    { state = Modal.open
+                    { state = Modal.open model.testModal.state
                     , content = ModalExample
                     }
               }
@@ -123,7 +123,7 @@ update msg model =
                 modal_ =
                     model.testModal
             in
-            ( { model | testModal = { modal_ | state = Modal.close } }
+            ( { model | testModal = { modal_ | state = Modal.close modal_.state } }
             , Cmd.none
             )
 
@@ -163,7 +163,7 @@ update msg model =
             if Form.isValid exampleForm model.exampleFormState then
                 ( { model
                     | testModal =
-                        { state = Modal.open
+                        { state = Modal.open model.testModal.state
                         , content = FormResult <| Form.extract exampleForm model.exampleFormState
                         }
                   }
@@ -1071,15 +1071,18 @@ type Contact
 variantForm : Form Contact MyError
 variantForm =
     Form.form
-        (\_ html -> html) -- no custom errors to display
-        alwaysValid -- any contact is valid
+        (\_ html -> html)
+        -- no custom errors to display
+        alwaysValid
+        -- any contact is valid
         "variant-example"
         (\contact ->
             { view = \formState _ -> contact.view formState
             , combine = \formState -> contact.value formState
             }
         )
-        |> fieldWithVariants identity (dropdown "Contact")
+        |> fieldWithVariants identity
+            (dropdown "Contact")
             ( "E-Mail", emailForm )
             [ ( "Phone number", phoneForm ) ]
             (\c ->
@@ -1378,7 +1381,7 @@ subscriptions model = Modal.subscriptions
 update msg model =
     case msg of
         OpenModal ->
-            { model | modalState = Modal.open }
+            { model | modalState = Modal.open model.modalState }
         ForModal msg ->
             { model 
             | modalState = Modal.update msg model.modalState

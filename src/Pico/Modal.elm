@@ -1,5 +1,10 @@
-module Pico.Modal exposing (ModalState, Msg, close, init, open, subscription, toggle, update, view)
-{-| 
+module Pico.Modal exposing
+    ( ModalState, init, Msg, update, subscription, view
+    , open, close, toggle
+    )
+
+{-|
+
 
 # Modal component
 
@@ -10,34 +15,39 @@ when the modal is open.
 This does however require interaction with the page outside the modal.
 You need to include the webcomponent that's in `picomponent.js` in the packages repository root.
 
+
 ## Setup
 
-**There must be only one instance of the modal component.** 
+**There must be only one instance of the modal component.**
 since there can never be multiple modals open at the same time.
 
 For the animation the component needs it's own state.
 So it is implemented with the Elm architecture.
 
-You need to: 
+You need to:
 
-1. add a `ModalState` field to your model
-2. initialize it with `Modal.init`
-3. add a variant to your `Mgs` type that takes a `Modal.Msg` as an argument
-4. forward the `Modal.Msg` to `Modal.update` and update your `ModalState` accordingly
-5. subscribe to `Modal.subscription` (and tell it which of your `Msg` to use to wrap the `Modal.Msg`)
-6. use `Modal.view` to render your modal
+1.  add a `ModalState` field to your model
+2.  initialize it with `Modal.init`
+3.  add a variant to your `Mgs` type that takes a `Modal.Msg` as an argument
+4.  forward the `Modal.Msg` to `Modal.update` and update your `ModalState` accordingly
+5.  subscribe to `Modal.subscription` (and tell it which of your `Msg` to use to wrap the `Modal.Msg`)
+6.  use `Modal.view` to render your modal
 
-@docs ModalState,  init, Msg, update, subscription, view
+@docs ModalState, init, Msg, update, subscription, view
+
 
 ## Control visibility
 
-@docs open, close, toggle 
+@docs open, close, toggle
+
 -}
+
 import Browser.Events
 import Html exposing (Html, div, node, text)
 import Html.Attributes exposing (attribute, id)
 import Json.Decode as D exposing (Decoder)
 import Time
+
 
 {-| The initial, closed state of the modal.
 -}
@@ -63,19 +73,31 @@ type Msg
     | ClosingDone
 
 
-
-{-| Closes the modal.
+{-| Closes the modal. Takes the current state of the modal to avoid
+closing and already closed modal.
 -}
-close : ModalState
-close =
-    IsClosing
+close : ModalState -> ModalState
+close modalState =
+    case modalState of
+        IsOpen ->
+            IsClosing
+
+        _ ->
+            modalState
 
 
-{-| Opens the modal.
+{-| Opens the modal. Takes the current state of the modal to avoid
+opening and already opened modal.
 -}
-open : ModalState
-open =
-    IsOpening
+open : ModalState -> ModalState
+open modalState =
+    case modalState of
+        IsClosed ->
+            IsOpening
+
+        _ ->
+            modalState
+
 
 {-| Toggles the modal.
 -}
@@ -88,7 +110,8 @@ toggle modalState =
         _ ->
             IsClosing
 
-{-| Transitions the modal 
+
+{-| Transitions the modal
 -}
 update : Msg -> ModalState -> ModalState
 update msg modalState =
@@ -101,6 +124,7 @@ update msg modalState =
 
         Close ->
             IsClosing
+
 
 {-| Listens to the escape key to close the modal.
 -}
@@ -123,6 +147,7 @@ subscription toMsg modalState =
 
                 _ ->
                     Sub.none
+
 
 {-| Render the modal.
 -}
