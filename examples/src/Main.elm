@@ -12,7 +12,7 @@ import Html.Attributes exposing (attribute, class, classList, disabled, href, id
 import Html.Events exposing (onClick, onInput)
 import Html.Lazy
 import Json.Encode as E exposing (Value)
-import List.Nonempty exposing (popFirst)
+import List.Nonempty
 import Markdown
 import Parser
 import Pico
@@ -425,36 +425,44 @@ You can use the `includeFromCDN` function to include the CSS for the given theme
     ]
 
 
+toNonEmpty : ( a, List a ) -> List.Nonempty.Nonempty a
+toNonEmpty ( x, xs ) =
+    List.Nonempty.fromList (x :: xs)
+        |> Maybe.withDefault (List.Nonempty.singleton x)
+
+
 layoutVariants : Variants Layout
 layoutVariants =
-    ( { value = Pico.Centered
-      , id = "centered"
-      , label = "Centered"
-      }
-    , [ { value = Pico.FullWidth
-        , id = "full"
-        , label = "FullWidth"
-        }
-      ]
-    )
+    toNonEmpty <|
+        ( { value = Pico.Centered
+          , id = "centered"
+          , label = "Centered"
+          }
+        , [ { value = Pico.FullWidth
+            , id = "full"
+            , label = "FullWidth"
+            }
+          ]
+        )
 
 
 colorSchemeVariants : Variants ColorScheme
 colorSchemeVariants =
-    ( { value = Pico.Theme.SystemScheme
-      , id = "system"
-      , label = "System"
-      }
-    , [ { value = Pico.Theme.Light
-        , id = "light"
-        , label = "Light"
-        }
-      , { value = Pico.Theme.Dark
-        , id = "dark"
-        , label = "Dark"
-        }
-      ]
-    )
+    toNonEmpty <|
+        ( { value = Pico.Theme.SystemScheme
+          , id = "system"
+          , label = "System"
+          }
+        , [ { value = Pico.Theme.Light
+            , id = "light"
+            , label = "Light"
+            }
+          , { value = Pico.Theme.Dark
+            , id = "dark"
+            , label = "Dark"
+            }
+          ]
+        )
 
 
 themeVariants : Variants Theme
@@ -466,9 +474,10 @@ themeVariants =
             , label = themeName theme
             }
     in
-    ( mkVariant Pico.Theme.Amber
-    , List.map mkVariant <| List.drop 1 Pico.Theme.themes
-    )
+    Pico.Theme.themes
+        |> List.map mkVariant
+        |> List.Nonempty.fromList
+        |> Maybe.withDefault (List.Nonempty.singleton <| mkVariant Pico.Theme.Amber)
 
 
 type FormId
